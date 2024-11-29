@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: dbot-db
+    image: "postgres:13.1-alpine"
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    expose:
+      - ${POSTGRES_PORT}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+  mq:
+    container_name: dbot-mq
+    image: "rabbitmq:management-alpine"
+    restart: always
+    expose:
+    - ${MQ_UI_PORT}
+    - ${MQ_PORT}
+    ports:
+      - "${MQ_UI_PORT}:15672"
+      - "${MQ_PORT}:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "twitchbot"
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
